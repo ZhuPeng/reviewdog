@@ -1,71 +1,61 @@
 language: go
-
 go:
-  - 1.7
-  - tip
-
+- 1.7
+- tip
 env:
   global:
-    - secure: "F1MWBFOxaa1vcb0bnjVTuVEzzaqxQykwHVzdeevKGG6qGwBqDoKjzDym1XbWdZkfsu6N2sEz6Xo9wAMQwc1nhBJTufQOKjwqy0zDXsKMF5aouvswqe4eEZ95IU8Ww30jGiw1E4d6RfvTvYOwZszB+vIvqJ7gs8msFr0wJaQUpJk+Qpd5TtNb8poY7J0qQH0GevlNIY5SieM52BbQKodEC9aUUTFYOvoZEOAiLPX/6qS1hvfOIwHEFxXo9jrUSiSyqYZTfEN9CExsO3M5iJQz1ZVvtylXpATcZ6Imo3Q5eL288wTx4VUjL/lrnS1vIkmgG0HWyOYg4FGl9l4TsANGf3EnByBtZmFJ/MLjmqtWQzodvU2wMCseVJ/MQzi6iOkunXccUCLzoh9F3rzbus8lP6io7yknaB/AqKyTj9oBY7AXT9r1wnEmO56XNQu11PK1qu2JeCOzkF52784vh+XNBfPTvJYmJy1c7m1Sys0rta2m6F9c3bZV24ZWPaY7DkfwcT6ytXJP44D6NI1k1cOOwmJ8oJfNkrgNBUTUfd8rKu4alKAG0VB59imTVH25ZYzUdxqiiG+tuXJ4ZG8bvreyfk4qTiF5BqdU0/iqGgEkdn2px7UZd656svLGI9qRodSCFhd7pCHw2UfGakGweRG9cW4GEYdDwHnEx+l2g8vc6EQ="
-
+  - secure: EGsFRFylEJkQAjYVc+BnouYLi782wvZEXT5iT2OTFtVQLiqfOMNJosjPqIW/1xzykrAGDqkGLy3HOWsLws9UfEB5lhW/7QNPX6zUXhVoVspYqMkadYyUSsr3/xDYQ5r7JlkdJZhSEXnnD0S9kftAaPCEjF4hYWuVWxqoArvBh/I0ylIxo5nfwgUUzUp/b0rkyysGNEJYFX+3X5wsOIYykg4/Zj40KQNjgJ1Pstoakw/idzsEdhYvxajJlEeFqb+MgAaEinf/z8E1BY7sg/6HPA6En/6w5+I9qEyNNe57cavm+O+oTKfKgtpeLS/BF7nY+/NzipOWsRVM5sPkto8V1bh2Q66XsAX0fO7ukRvh19n8jBQ+CY6B6aYLgbsEvYOe6/JEvNL1vhO2SDYVl36fECWb0Gd6V5buvlLYe5+N/3jSNfuOr+bcWBxRvZPWEA/2RLwuK++TkAu5YMA++PizWqKoJQzMdnY6RnKdAF0XE7fv8+NluY2LxE2BgjiBkvhdTJs8ls27BbsxEINNumjsqsv8ENlBdaQ/nXdnXcD6RV0jnM3rbXwUKYVYArAEcvzA9TKoLeLYx+2H4mhEyTZRsWC4MPdhWSgkRkjuWivuxXsSghe/7o8lEbNuAwLlqIbYvAj4c3HpGRmsocm7Exh1XQ77Kg6WOdSyXy0v6ONCOaI=
 install:
-  - go get -d -v -t ./...
-  - go get github.com/mattn/goveralls
-  - go get github.com/haya14busa/goverage
-  - go get github.com/golang/lint/golint
-
+- go get -d -v -t ./...
+- go get github.com/mattn/goveralls
+- go get github.com/haya14busa/goverage
+- go get github.com/golang/lint/golint
 before_script:
-  - echo $TRAVIS
-  - echo $TRAVIS_PULL_REQUEST
-  - echo $TRAVIS_PULL_REQUEST_BRANCH
-  - echo $TRAVIS_COMMIT
-  - echo $TRAVIS_PULL_REQUEST_SHA
-  - echo $TRAVIS_REPO_SLUG
-  - echo $TRAVIS_SECURE_ENV_VARS
-
+- echo $TRAVIS
+- echo $TRAVIS_PULL_REQUEST
+- echo $TRAVIS_PULL_REQUEST_BRANCH
+- echo $TRAVIS_COMMIT
+- echo $TRAVIS_PULL_REQUEST_SHA
+- echo $TRAVIS_REPO_SLUG
+- echo $TRAVIS_SECURE_ENV_VARS
 script:
-  - go test -v -race ./...
-  - goverage -coverprofile=coverage.txt ./...
-  - go install ./cmd/reviewdog
-  - >-
-    golint ./... | reviewdog -f=golint -ci=travis
-
+- go test -v -race ./...
+- goverage -coverprofile=coverage.txt ./...
+- go install ./cmd/reviewdog
+- golint ./... | reviewdog -f=golint -ci=travis
 after_success:
-  - goveralls -service=travis-ci -coverprofile=coverage.txt
-  - bash <(curl -s https://codecov.io/bash)
-
+- goveralls -service=travis-ci -coverprofile=coverage.txt
+- bash <(curl -s https://codecov.io/bash)
 before_deploy:
-  - go get github.com/mitchellh/gox
-  - gox -output "dist/{{.Dir}}_{{.OS}}_{{.Arch}}" ./cmd/reviewdog/
-
+- go get github.com/mitchellh/gox
+- gox -output "dist/{{.Dir}}_{{.OS}}_{{.Arch}}" ./cmd/reviewdog/
 deploy:
   provider: releases
   api_key:
-    secure: "gOJqairdmqDqBeWvwVv6cuUOeX3uIEoufVv6/s37E+AFDth+F5t8aUinV7uaIV/FjNlucFM5T8sY1pkPiTY7ChiUkn9Fvulz9XCPwKqDymlL8i10pQP4GfgdbeVG2k+U42s+MEQBugj73GQTrYTT5UaXv3jHZUcMAbYzJUJU15sdnsqm/1VQShuKq05hDDkJqWUruZiKKMTaq5+SJoZ0YHoACx/0CMnC65+aT/BJSuHJRD6lPIq+bEA+jD1CrZ0Jkxbwxh8nHzX67GRjYpevnNgrpzheC0nKkugIX+ePds8758sQmBsjqfao7CrvEQxeI6fkZHE0vge44dt0iUixaEZaA/YoY7vdhZwkbqPfcVNBCthHee2qkCmosYmn2ipOcnyXLpHYHCp4KDiIz5ny+QNZVxd5qQbXzgDEFQw8D3grNrXEvSTyq+yZB0Ti27tL6gonvjg/ejBwjtzgfvyMZVuZRbnEwBYJDVpZ/W5A0Gr3W1mfDrW1I5/ALh0Y2kd3Erd4XzCnYLupxh1USt8648ONVFaP68ppDeKGNcmrxRIYB8JGe6VQMoxnRWjwN2xf9UNIXy8KWDtbRUlP1R92V3jUmZf2VqFkLdJVWSFs0sHlPEGeaTnk7WZLWMWQpBTJHJbeY9jYme5m4T0a7hCV+kM1WufSaMQCUmm3R0i4dkA="
+    secure: gOJqairdmqDqBeWvwVv6cuUOeX3uIEoufVv6/s37E+AFDth+F5t8aUinV7uaIV/FjNlucFM5T8sY1pkPiTY7ChiUkn9Fvulz9XCPwKqDymlL8i10pQP4GfgdbeVG2k+U42s+MEQBugj73GQTrYTT5UaXv3jHZUcMAbYzJUJU15sdnsqm/1VQShuKq05hDDkJqWUruZiKKMTaq5+SJoZ0YHoACx/0CMnC65+aT/BJSuHJRD6lPIq+bEA+jD1CrZ0Jkxbwxh8nHzX67GRjYpevnNgrpzheC0nKkugIX+ePds8758sQmBsjqfao7CrvEQxeI6fkZHE0vge44dt0iUixaEZaA/YoY7vdhZwkbqPfcVNBCthHee2qkCmosYmn2ipOcnyXLpHYHCp4KDiIz5ny+QNZVxd5qQbXzgDEFQw8D3grNrXEvSTyq+yZB0Ti27tL6gonvjg/ejBwjtzgfvyMZVuZRbnEwBYJDVpZ/W5A0Gr3W1mfDrW1I5/ALh0Y2kd3Erd4XzCnYLupxh1USt8648ONVFaP68ppDeKGNcmrxRIYB8JGe6VQMoxnRWjwN2xf9UNIXy8KWDtbRUlP1R92V3jUmZf2VqFkLdJVWSFs0sHlPEGeaTnk7WZLWMWQpBTJHJbeY9jYme5m4T0a7hCV+kM1WufSaMQCUmm3R0i4dkA=
   file:
-    - dist/reviewdog_darwin_386
-    - dist/reviewdog_darwin_amd64
-    - dist/reviewdog_freebsd_386
-    - dist/reviewdog_freebsd_amd64
-    - dist/reviewdog_freebsd_arm
-    - dist/reviewdog_linux_386
-    - dist/reviewdog_linux_amd64
-    - dist/reviewdog_linux_arm
-    - dist/reviewdog_netbsd_386
-    - dist/reviewdog_netbsd_amd64
-    - dist/reviewdog_netbsd_arm
-    - dist/reviewdog_openbsd_386
-    - dist/reviewdog_openbsd_amd64
-    - dist/reviewdog_windows_386.exe
-    - dist/reviewdog_windows_amd64.exe
+  - dist/reviewdog_darwin_386
+  - dist/reviewdog_darwin_amd64
+  - dist/reviewdog_freebsd_386
+  - dist/reviewdog_freebsd_amd64
+  - dist/reviewdog_freebsd_arm
+  - dist/reviewdog_linux_386
+  - dist/reviewdog_linux_amd64
+  - dist/reviewdog_linux_arm
+  - dist/reviewdog_netbsd_386
+  - dist/reviewdog_netbsd_amd64
+  - dist/reviewdog_netbsd_arm
+  - dist/reviewdog_openbsd_386
+  - dist/reviewdog_openbsd_amd64
+  - dist/reviewdog_windows_386.exe
+  - dist/reviewdog_windows_amd64.exe
   skip_cleanup: true
   on:
     tags: true
-
 notifications:
   webhooks:
     urls:
-      - https://webhooks.gitter.im/e/60344004ff53f5ef37c5
+    - https://webhooks.gitter.im/e/60344004ff53f5ef37c5
     on_success: change
     on_failure: always
     on_start: never
