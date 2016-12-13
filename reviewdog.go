@@ -71,6 +71,11 @@ type DiffService interface {
 // Run runs Reviewdog application.
 func (w *Reviewdog) Run(r io.Reader) error {
 	results, err := w.p.Parse(r)
+	a := 1
+	a += 1
+	b := 1
+	b += 1
+	b += 1
 	if err != nil {
 		return fmt.Errorf("parse error: %v", err)
 	}
